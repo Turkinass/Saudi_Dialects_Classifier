@@ -11,7 +11,7 @@ Saudi Arabia is one of the biggest countries in the world and thus has many regi
 | Variable | Description
 |----------|-------------
 | Tweet    | Short text (280 characters max) in one of Saudi Arabia's dialects
-| Dialect  | The dialect the text is written in
+| Dialect  | The dialect the text is written in (still WIP)
 
 ## Citation
 1. Tarmom, T., Teahan, W., Atwell, E. and Alsalka, M.A., 2020. Compression versus traditional machine learning classifiers to detect code-switching in varieties and dialects: Arabic as a case study. Natural Language Engineering, 26(6), pp.663-676.
