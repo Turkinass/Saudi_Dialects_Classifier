@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.113">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Turki Alsaedi">
+
+<title>Saudi Dialects Classifier</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: 1;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="Saudi_Dialects_Classifier_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Saudi_Dialects_Classifier_files/libs/quarto-html/quarto.js"></script>
+<script src="Saudi_Dialects_Classifier_files/libs/quarto-html/popper.min.js"></script>
+<script src="Saudi_Dialects_Classifier_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Saudi_Dialects_Classifier_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Saudi_Dialects_Classifier_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Saudi_Dialects_Classifier_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Saudi_Dialects_Classifier_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Saudi_Dialects_Classifier_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Saudi_Dialects_Classifier_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Saudi Dialects Classifier</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Turki Alsaedi </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="about" class="level2">
+<h2 class="anchored" data-anchor-id="about">About</h2>
+<p>A supervised ANN model that takes a given text and classifies it into one of Saudi Arabia’s main regional dialects.</p>
+</section>
+<section id="background-and-goal" class="level2">
+<h2 class="anchored" data-anchor-id="background-and-goal">Background and Goal</h2>
+<p>Saudi Arabia is one of the biggest countries in the world and thus has many regions each with it own dialect. Classifying a given text into its corresponding dialect can help better understand the meaning of the text and ideally help enable replying in the same dialect.</p>
+</section>
+<section id="loading-libraries-and-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-libraries-and-data">Loading Libraries and Data</h2>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarabic.araby <span class="im">as</span> araby</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.preprocessing.text <span class="im">import</span> Tokenizer</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"data/data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[[<span class="st">"Embedded_text"</span>, <span class="st">"dialect"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># H: Hijazi</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># N: Najdi</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># E: Eastern</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># S: Southern</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># W: White</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Embedded_text</th>
+      <th>dialect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>بموت ، ايش هادا الغزل الرخيص ؟ ، بس معليش صادق...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ياربي معاتيه كل واحد يسوي مصيبه يزغرط يركب حصا...</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ياروحي تتاكل ماشاء الله عليها، الله يحفظها ويخ...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>جديًا هادا الاداء يفوز بقلبي اقسم بالله ، اتمن...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>. https://twitter.com/bbhsparkles/status/99860...</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5245</th>
+      <td>والغلط فالنهاية عليا انا</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5246</th>
+      <td>الدُنيا بادية معايا تحدي ودي المرة بالقوي</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5247</th>
+      <td>م كنت افهم لمن بعض الناس يغردو و يقولو النوم س...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5248</th>
+      <td>امـي هيا الشخص الوحيد الي اخوض معاها نقاش وادر...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5249</th>
+      <td>الجملة نرفزتني الصراحة يعني مدري افضل صاحية 24...</td>
+      <td>H</td>
+    </tr>
+  </tbody>
+</table>
+<p>5250 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> data[<span class="st">"dialect"</span>].value_counts(dropna<span class="op">=</span><span class="va">False</span>).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels([<span class="st">"Southern"</span>, <span class="st">"White"</span>, <span class="st">"Hijazi"</span>, <span class="st">"NA"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Saudi_Dialects_Classifier_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.dropna()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Embedded_text</th>
+      <th>dialect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>بموت ، ايش هادا الغزل الرخيص ؟ ، بس معليش صادق...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ياربي معاتيه كل واحد يسوي مصيبه يزغرط يركب حصا...</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ياروحي تتاكل ماشاء الله عليها، الله يحفظها ويخ...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>جديًا هادا الاداء يفوز بقلبي اقسم بالله ، اتمن...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Replying to \n@Layan_sami\nالوانها واشكالها تف...</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5245</th>
+      <td>والغلط فالنهاية عليا انا</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5246</th>
+      <td>الدُنيا بادية معايا تحدي ودي المرة بالقوي</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5247</th>
+      <td>م كنت افهم لمن بعض الناس يغردو و يقولو النوم س...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5248</th>
+      <td>امـي هيا الشخص الوحيد الي اخوض معاها نقاش وادر...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5249</th>
+      <td>الجملة نرفزتني الصراحة يعني مدري افضل صاحية 24...</td>
+      <td>H</td>
+    </tr>
+  </tbody>
+</table>
+<p>5189 rows × 2 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pre-processing-tweets" class="level2">
+<h2 class="anchored" data-anchor-id="pre-processing-tweets">Pre-processing tweets</h2>
+<ol type="1">
+<li>Remove any non-Arabic text</li>
+<li>Remove repeated characters</li>
+<li>Remove Arabicc diacritics (haraket, tatweel and hamza)</li>
+<li>Correct some spelling mistakes</li>
+</ol>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing any non-Arabic words/characters (English, emojis, special characters, etc...)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>txt <span class="op">=</span> <span class="st">"جديًا هادا الاداء يفوز ب قلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> re.findall(<span class="st">"[</span><span class="ch">\u0621</span><span class="st">-</span><span class="ch">\u064A</span><span class="st">]+"</span>, txt)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">' '</span>.join(x)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<pre><code>'جدي ا هادا الاداء يفوز ب قلبــــي اقسم بالله اتمنننننى انهم يرجعو يأدوه'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove repeated characters</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>re.sub(<span class="vs">r'(.)\1+'</span>, <span class="vs">r'\1'</span>, txt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>'جديًا هادا الاداء يفوز ب قلبـي اقسم باله ، اتمنى انهم يرجعو يأدوه htps:/twiter.com/eklmre/status/968485346862694… This Twet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove diacritics and tatweel and hamza</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>araby.strip_tashkeel(txt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<pre><code>'جديا هادا الاداء يفوز ب قلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>araby.strip_tatweel(txt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>'جديًا هادا الاداء يفوز ب قلبي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix incorrect spelling</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>txt.replace(<span class="st">" ب "</span>, <span class="st">" ب"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<pre><code>'جديًا هادا الاداء يفوز بقلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>txt.replace(<span class="st">" م "</span>, <span class="st">" ما "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>'جديًا هادا الاداء يفوز ب قلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># unify Taa marbuta to avoid different spelling</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>txt.replace(<span class="st">"ة"</span>, <span class="st">"ه"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<pre><code>'جديًا هادا الاداء يفوز ب قلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>araby.normalize_hamza(txt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="48">
+<pre><code>'جديًا هادا الاداء يفوز ب قلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يءدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_text(txt):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> araby.strip_tashkeel(txt)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> txt.replace(<span class="st">" م "</span>, <span class="st">" ما "</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> txt.replace(<span class="st">"ة"</span>, <span class="st">"ه"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l <span class="kw">in</span> [<span class="st">"ب"</span>, <span class="st">"ف"</span>, <span class="st">"و"</span>, <span class="st">"ك"</span>,<span class="st">"ما"</span>]:</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="ss">f" </span><span class="sc">{</span>l<span class="sc">}</span><span class="ss"> "</span> <span class="kw">in</span> txt:</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            txt <span class="op">=</span> txt.replace(<span class="ss">f" </span><span class="sc">{</span>l<span class="sc">}</span><span class="ss"> "</span>, <span class="ss">f" </span><span class="sc">{</span>l<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> re.findall(<span class="st">"[</span><span class="ch">\u0621</span><span class="st">-</span><span class="ch">\u064A</span><span class="st">]+"</span>, txt)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> <span class="st">' '</span>.join(txt) </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> re.sub(<span class="vs">r'(.)\1+'</span>, <span class="vs">r'\1'</span>, txt)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> araby.strip_tatweel(txt)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    txt <span class="op">=</span> araby.normalize_hamza(txt)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ORIGINAL TEXT</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> txt <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"PROCESSED TEXT</span><span class="ch">\n</span><span class="st">"</span><span class="op">+</span> process_text(txt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ORIGINAL TEXT
+جديًا هادا الاداء يفوز ب قلبــــي اقسم بالله ، اتمنننننى انهم يرجعو يأدوه https://twitter.com/eklmre/status/999684853468626944… This Tweet is unavailab
+
+PROCESSED TEXT
+جديا هادا الاداء يفوز بقلبي اقسم باله اتمنى انهم يرجعو يءدوه</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"Embedded_text"</span>] <span class="op">=</span> data[<span class="st">"Embedded_text"</span>].<span class="bu">apply</span>(process_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># English-only text get converted to "" i.e.  empty string, this </span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># function coverts it to NA then drop it using dropna()</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.replace(<span class="st">''</span>, np.nan).dropna()</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Embedded_text</th>
+      <th>dialect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>بموت ايش هادا الغزل الرخيص بس معليش صادقه واله...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ياربي معاتيه كل واحد يسوي مصيبه يزغرط يركب حصا...</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ياروحي تاكل ماشاء اله عليها اله يحفظها ويخليها...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>جديا هادا الاداء يفوز بقلبي اقسم باله اتمنى ان...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>الوانها واشكالها تفتح النفس ماشاء اله</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5245</th>
+      <td>والغلط فالنهايه عليا انا</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5246</th>
+      <td>الدنيا باديه معايا تحدي ودي المره بالقوي</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5247</th>
+      <td>م كنت افهم لمن بعض الناس يغردو ويقولو النوم سا...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5248</th>
+      <td>امي هيا الشخص الوحيد الي اخوض معاها نقاش وادري...</td>
+      <td>H</td>
+    </tr>
+    <tr>
+      <th>5249</th>
+      <td>الجمله نرفزتني الصراحه يعني مدري افضل صاحيه سا...</td>
+      <td>H</td>
+    </tr>
+  </tbody>
+</table>
+<p>4528 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> data[<span class="st">"dialect"</span>].value_counts(dropna<span class="op">=</span><span class="va">False</span>).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels([<span class="st">"Southern"</span>, <span class="st">"White"</span>, <span class="st">"Hijazi"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Saudi_Dialects_Classifier_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="modelling" class="level2">
+<h2 class="anchored" data-anchor-id="modelling">Modelling</h2>
+<p><strong>Why no stemming, lemmatization and stop words?</strong> 1. stemming, lemmatization are only available for formal Arabic. 2. stop words are important to identify dialects: usually هذا، هاذا، هادا etc is ignored.</p>
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the data</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data[<span class="st">'Embedded_text'</span>]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">'dialect'</span>]</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size <span class="op">=</span> <span class="fl">0.20</span>, random_state <span class="op">=</span> <span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenizing labels</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>le <span class="op">=</span> LabelEncoder()</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> le.fit_transform(y_train)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> le.transform(y_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.preprocessing.sequence <span class="im">import</span> pad_sequences</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>max_length <span class="op">=</span> <span class="dv">100</span> <span class="co"># avg tweet has &lt; 100 words</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenizing text</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> Tokenizer(oov_token<span class="op">=</span><span class="st">'&lt;OOV&gt;'</span>) <span class="co"># fill in words absent from corpus with &lt;OOV&gt; to keep text length</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>tokenizer.fit_on_texts(X_train)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co"># representing each text as a sequence of tokens</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>train_sequence <span class="op">=</span> tokenizer.texts_to_sequences(X_train)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co"># padding each sequence with trailing zeros so that all sequence have same length</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>train_pad <span class="op">=</span> pad_sequences(train_sequence, maxlen<span class="op">=</span>max_length, padding<span class="op">=</span><span class="st">'post'</span>, truncating<span class="op">=</span><span class="st">'post'</span>)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>test_sequence <span class="op">=</span> tokenizer.texts_to_sequences(X_test)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>test_pad <span class="op">=</span> pad_sequences(test_sequence, maxlen<span class="op">=</span>max_length, padding<span class="op">=</span><span class="st">'post'</span>, truncating<span class="op">=</span><span class="st">'post'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Most used words in all text</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">dict</span>(<span class="bu">list</span>(tokenizer.word_index.items())[<span class="dv">0</span>:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>{'&lt;OOV&gt;': 1,
+ 'من': 2,
+ 'اله': 3,
+ 'في': 4,
+ 'الهم': 5,
+ 'على': 6,
+ 'الي': 7,
+ 'كل': 8,
+ 'ه': 9,
+ 'بس': 10}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining hyperparamerts</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>n_dim <span class="op">=</span> <span class="dv">16</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>training_size <span class="op">=</span> X_train.shape[<span class="dv">0</span>]</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>vocab_size <span class="op">=</span> <span class="bu">len</span>(tokenizer.word_index) <span class="op">+</span> <span class="dv">1</span> <span class="co"># zero indexed</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>embedding_dim <span class="op">=</span> <span class="dv">64</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    tf.keras.layers.Embedding(vocab_size, embedding_dim),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(embedding_dim)),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    tf.keras.layers.Dropout(<span class="fl">0.2</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    tf.keras.layers.Dense(<span class="dv">3</span>, activation<span class="op">=</span><span class="st">'softmax'</span>),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model: "sequential_1"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding_1 (Embedding)     (None, None, 64)          704128    
+                                                                 
+ bidirectional_1 (Bidirectio  (None, 128)              66048     
+ nal)                                                            
+                                                                 
+ dropout_1 (Dropout)         (None, 128)               0         
+                                                                 
+ dense_1 (Dense)             (None, 3)                 387       
+                                                                 
+=================================================================
+Total params: 770,563
+Trainable params: 770,563
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">'sparse_categorical_crossentropy'</span>, optimizer<span class="op">=</span><span class="st">'adam'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>])</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> model.fit(train_pad, y_train, epochs<span class="op">=</span>epochs, validation_data<span class="op">=</span>(test_pad, y_test), verbose<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 1/10
+114/114 - 14s - loss: 1.0174 - accuracy: 0.4666 - val_loss: 0.9266 - val_accuracy: 0.5563 - 14s/epoch - 121ms/step
+Epoch 2/10
+114/114 - 9s - loss: 0.6406 - accuracy: 0.7457 - val_loss: 0.7239 - val_accuracy: 0.7053 - 9s/epoch - 81ms/step
+Epoch 3/10
+114/114 - 9s - loss: 0.2604 - accuracy: 0.9117 - val_loss: 0.8475 - val_accuracy: 0.6887 - 9s/epoch - 76ms/step
+Epoch 4/10
+114/114 - 8s - loss: 0.1342 - accuracy: 0.9602 - val_loss: 0.9004 - val_accuracy: 0.6909 - 8s/epoch - 69ms/step
+Epoch 5/10
+114/114 - 8s - loss: 0.0761 - accuracy: 0.9785 - val_loss: 0.9417 - val_accuracy: 0.6865 - 8s/epoch - 72ms/step
+Epoch 6/10
+114/114 - 9s - loss: 0.0604 - accuracy: 0.9804 - val_loss: 1.1288 - val_accuracy: 0.6700 - 9s/epoch - 79ms/step
+Epoch 7/10
+114/114 - 9s - loss: 0.0517 - accuracy: 0.9843 - val_loss: 0.9937 - val_accuracy: 0.6876 - 9s/epoch - 78ms/step
+Epoch 8/10
+114/114 - 13s - loss: 0.0463 - accuracy: 0.9862 - val_loss: 1.0746 - val_accuracy: 0.6810 - 13s/epoch - 117ms/step
+Epoch 9/10
+114/114 - 9s - loss: 0.0414 - accuracy: 0.9870 - val_loss: 1.1379 - val_accuracy: 0.6744 - 9s/epoch - 78ms/step
+Epoch 10/10
+114/114 - 7s - loss: 0.0427 - accuracy: 0.9848 - val_loss: 1.0981 - val_accuracy: 0.6722 - 7s/epoch - 61ms/step</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_graphs(history, string):</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  plt.plot(history.history[string])</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  plt.plot(history.history[<span class="st">'val_'</span><span class="op">+</span>string])</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  plt.xlabel(<span class="st">"Epochs"</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  plt.ylabel(string)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  plt.legend([string, <span class="st">'val_'</span><span class="op">+</span>string])</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  plt.show()</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>plot_graphs(history, <span class="st">"accuracy"</span>)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>plot_graphs(history, <span class="st">"loss"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Saudi_Dialects_Classifier_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="Saudi_Dialects_Classifier_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Althrough we got a high accuracy, the validation accuracy is much lower which indicates an overfit model.</p>
+</section>
+<section id="assumptions-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions-and-limitations">Assumptions and Limitations</h2>
+<ol type="1">
+<li>Input text will be clean from other languages text or emojis</li>
+<li>For the input text to be classified accurately it should use same spelling used in training text</li>
+</ol>
+</section>
+<section id="future-development" class="level2">
+<h2 class="anchored" data-anchor-id="future-development">Future development</h2>
+<ol type="1">
+<li>Increase dataset size</li>
+<li>Manually check every entry</li>
+<li>Deploy the model</li>
+</ol>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Classifying an Arabic text and especially non formal Arabic is still a challenge due to the lack of tools and resources. Having it would make the process much smoother and yeilds overall better results.</p>
+</section>
+<section id="source-code" class="level2">
+<h2 class="anchored" data-anchor-id="source-code">Source Code</h2>
+<p>This report is hosted on Github Pages and the repo can be accessed via <a href="https://github.com/Turkinass/Saudi_Dialects_Classifier">this link</a>.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
